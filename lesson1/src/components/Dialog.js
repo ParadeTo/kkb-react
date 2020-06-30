@@ -10,9 +10,7 @@ export default class Dialog extends Component {
   }
 
   componentWillUnmount() {
-    if (this.node) {
-      window.document.body.removeChild(this.node);
-    }
+    window.document.body.removeChild(this.node);
   }
 
   render() {
