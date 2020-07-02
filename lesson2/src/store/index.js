@@ -1,5 +1,5 @@
-// import {combineReducers} from 'redux'
-import {createStore, combineReducers, applyMiddleware} from '../kredux/'
+// import {createStore, applyMiddleware, combineReducers} from "redux";
+import {createStore, applyMiddleware, combineReducers} from '../kredux/'
 // import thunk from "redux-thunk";
 // import logger from "redux-logger";
 // import promise from "redux-promise";
@@ -8,6 +8,8 @@ import {createStore, combineReducers, applyMiddleware} from '../kredux/'
 import isPromise from 'is-promise'
 
 // 判读是否标准 标准的类型是{type: 'XXX', payload: 'XXX'}
+// ! 课后补充
+// ! 类型是plain object，type值必传，可选传payload, error, meta。可以参考源码https://github.com/redux-utilities/flux-standard-action/blob/master/src/index.js
 import {isFSA} from 'flux-standard-action'
 
 // 定义修改规则
@@ -31,8 +33,24 @@ function name(state = 'kkb', action) {
   }
 }
 
+function countReducer2(state = {num: 0}, {type, payload}) {
+  switch (type) {
+    case 'ADD2':
+      return {...state, num: state.num + payload}
+    default:
+      return state
+  }
+}
+
 const store = createStore(
-  combineReducers({count, name}),
+  // countReducer,
+
+  // ! 课后补充 combineReducers用法
+  combineReducers({
+    count: countReducer,
+    // 如果还有别的reducer，可以继续在这里添加
+    count2: countReducer2,
+  }),
   applyMiddleware(thunk, logger, promise)
 )
 

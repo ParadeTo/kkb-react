@@ -1,18 +1,15 @@
 export default function combineReducers(reducers) {
-  const keys = Object.keys(reducers)
-  return (state = {}, action) => {
+  return function combination(state = {}, action) {
+    let nextState = {}
     let hasChanged = false
-    const nextState = {}
-    debugger
-    for (let i = 0, len = keys.length; i < len; i++) {
-      const key = keys[i]
+    for (let key in reducers) {
       const reducer = reducers[key]
-      const prevStateForKey = state[key]
-      const nextStateForKey = reducer(prevStateForKey, action)
-      nextState[key] = nextStateForKey
-      hasChanged = hasChanged || nextStateForKey !== prevStateForKey
+      nextState[key] = reducer(state[key], action)
+      hasChanged = hasChanged || nextState[key] !== state[key]
     }
-    hasChanged = hasChanged || keys.length !== Object.keys(state).length
+
+    hasChanged =
+      hasChanged || Object.keys(nextState).length !== Object.keys(state).length
     return hasChanged ? nextState : state
   }
 }
